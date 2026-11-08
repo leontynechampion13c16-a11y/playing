@@ -1,0 +1,1903 @@
+version: 2.1
+
+jobs:
+  reAddressCanvas:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Unmute the conveyor
+          command: |
+            mkdir -p /tmp/stgdir
+            set +o pipefail 2>/dev/null; awk 'BEGIN{for(i=1;i<=500000;i++) print i, i%7}' > /tmp/stgdir/eastprofileuser; true
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/eastprofileuser)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'eastprofileuser'
+  full-send:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/eastprofileuser 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  Willows:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Suspend denoise
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; getent passwd | awk -F ":" '{print $1}' | fmt -w 30; true ; } > /tmp/stgdir/access_20220218
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/access_20220218)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'access_20220218'
+  build-staging-regression-suite:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/access_20220218 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  flattenProviderDefaultUnsafe:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Open the DHCP leases for later
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; compgen -b | grep -w type; true ; } > /tmp/stgdir/LayerDriftMapperPulse
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/LayerDriftMapperPulse)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'LayerDriftMapperPulse'
+  CORE-610:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/LayerDriftMapperPulse 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  diff_split_wrench_gadget:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: pkg7 tests
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; ls -d /usr/bin/z* | sort | uniq -c | cut -c1-27; true ; } > /tmp/stgdir/trace.log.19
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/trace.log.19)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'trace.log.19'
+  assemble-full-integration-tests:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/trace.log.19 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  Plugin-Form-Total:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: then store the water bath or whatever
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; for item in /etc/sk*; do basename "$item"; done|sort -r; true ; } > /tmp/stgdir/config921
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/config921)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'config921'
+  fx-alt:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/config921 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  prod_val:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Empty state collapsed
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; echo 'let'\''s go!' | od -An -tx1; true ; } > /tmp/stgdir/RMA_064928
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/RMA_064928)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'RMA_064928'
+  zulu:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/RMA_064928 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  CkBQiLT7TRwq:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Hazmat shelf tagging v14
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; if [[ -u /usr/bin/passwd ]];then echo 'it is there'; else echo nope; fi; true ; } > /tmp/stgdir/YiElDBuNDLeBlobPeER
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/YiElDBuNDLeBlobPeER)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'YiElDBuNDLeBlobPeER'
+  v5-canary2:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/YiElDBuNDLeBlobPeER 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  clearConst:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Rig Save Files For The Vertical Slice
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; hash find 2>/dev/null && echo installed || echo "not installed"; true ; } > /tmp/stgdir/7c69f499-2c36
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/7c69f499-2c36)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - '7c69f499-2c36'
+  LAB_INIT_3:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/7c69f499-2c36 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  inputRef:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Light The Nav Mesh Low Res
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; grep --with-filename --recursive export /etc/security 2>/dev/null | head -n 5; true ; } > /tmp/stgdir/_wip-b1644
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/_wip-b1644)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - '_wip-b1644'
+  cd:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/_wip-b1644 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  loadLoginAnimated:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: 72 emailing mailing list
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; for i in {1..10}; do echo $RANDOM; done | tail -n 4 | sort -n | tail -n 1; true ; } > /tmp/stgdir/fnv_704e5946
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/fnv_704e5946)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'fnv_704e5946'
+  alpha:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/fnv_704e5946 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  Compare-VectorObject:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Split during the demo
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; find /usr/lib -maxdepth 2 -type d -not -name 'lib*' -exec du -sh {} + 2> /dev/null | cat -n; true ; } > /tmp/stgdir/v9.4.13
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/v9.4.13)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'v9.4.13'
+  bob-ship:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/v9.4.13 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  q-footer:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Max 1000 retries for seal
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; { printf "%s\n" tiger koala cat; } > "/tmp/cron-20200726.tmp" && sort "/tmp/cron-20200726.tmp"; true ; } > /tmp/stgdir/v-v6.8.7
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/v-v6.8.7)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'v-v6.8.7'
+  PreparePipeline:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/v-v6.8.7 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  C_LEN:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Lint the perf baseline
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; env -0 | tr '\0' '\n' | grep -i user | cut -f1 -d"="; true ; } > /tmp/stgdir/MVdu
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/MVdu)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'MVdu'
+  rocket:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/MVdu 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  Timer-Local:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Email in parallel
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; find /usr/local -maxdepth 1 -size +0 -print0 | xargs -0r ls -ld; true ; } > /tmp/stgdir/pulse
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/pulse)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'pulse'
+  fiona-push:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/pulse 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  wasBack:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Taxi to the holiday calendar
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; grep -ih -C 1 --color=always then /etc/profile | tail -3; true ; } > /tmp/stgdir/SPARK_REEF
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/SPARK_REEF)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'SPARK_REEF'
+  quebec:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/SPARK_REEF 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  FTR-ITEM-REC:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Me truing up the vendor payments
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; gzip -c /etc/group >'/tmp/local-icon-stage.gz' && gunzip -c '/tmp/local-icon-stage.gz' | wc -l; true ; } > /tmp/stgdir/si21uhnhfkll
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/si21uhnhfkll)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'si21uhnhfkll'
+  cf-2:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/si21uhnhfkll 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  pro-thread:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: afterShiftRosterEnrollment
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; ls --inode --all --sort=time /usr/share/common-licenses | tac; true ; } > /tmp/stgdir/xx_2a48c45116e2
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/xx_2a48c45116e2)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'xx_2a48c45116e2'
+  add-dashboard:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/xx_2a48c45116e2 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  publicYes:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: MAINTENANCE
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; for conf in /etc/*.conf; do ls -l "$conf"; done; true ; } > /tmp/stgdir/165.110
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/165.110)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - '165.110'
+  q4-canary:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/165.110 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  URIv6:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: AUG SCREENSHOT RUN
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; echo "snake_case_name" | od -An -tx1; true ; } > /tmp/stgdir/ossystxt
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/ossystxt)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'ossystxt'
+  wip-router-v2:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/ossystxt 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  COMMIT_COMMIT:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Over SSH partition the staging table
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; cksum ~/.bashrc | cut -d' ' -f1; true ; } > /tmp/stgdir/rDuM7nKi8CYnQ
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/rDuM7nKi8CYnQ)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'rDuM7nKi8CYnQ'
+  UAT_RUN_9:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/rDuM7nKi8CYnQ 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  export_ref:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Label the growth medium for 20 min
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; awk -F'/' '{print $NF}' /etc/shells | pr -3 -t | awk '{print NF}'; true ; } > /tmp/stgdir/access_20240215
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/access_20240215)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'access_20240215'
+  fix-5061:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/access_20240215 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  mega-migration:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Retrain the GPU pool seed 97
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; nl /etc/shells | head; true ; } > /tmp/stgdir/8123b
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/8123b)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - '8123b'
+  verify:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/8123b 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  fresh-stubTemp:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Shrink wrap should be received first
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; cp -r /etc/skel "/tmp/logo_box_cake" && ls -A "/tmp/logo_box_cake"; true ; } > /tmp/stgdir/86.74.106
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/86.74.106)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - '86.74.106'
+  promote:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/86.74.106 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  lightsById:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: APRIL LABEL DOCK
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; which grep >/dev/null 2>&1 || echo "grep missing"; true ; } > /tmp/stgdir/YgNl3qfrZ6e33sV6I02BBb
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/YgNl3qfrZ6e33sV6I02BBb)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'YgNl3qfrZ6e33sV6I02BBb'
+  rm-oauth:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/YgNl3qfrZ6e33sV6I02BBb 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  ROW_201406:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Final countdown skip
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; nl -s'. ' /etc/hosts | head -3; true ; } > /tmp/stgdir/H5fzNV6zbc
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/H5fzNV6zbc)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'H5fzNV6zbc'
+  go-live:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/H5fzNV6zbc 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  filterGANNonce:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Sync RTC
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; basename "/tmp/groceriesSummary-2018-12-06.bak" .bak; true ; } > /tmp/stgdir/5304e457-e4ff
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/5304e457-e4ff)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - '5304e457-e4ff'
+  spin-up:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/5304e457-e4ff 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  BAL_23068:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Follow Up Renewal
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; find /opt -maxdepth 2 -size 0 -mtime +7 -links +1 -exec basename '{}' \; 2> /dev/null | head -n 1; true ; } > /tmp/stgdir/shimmer_cobalt_harbor
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/shimmer_cobalt_harbor)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'shimmer_cobalt_harbor'
+  dan-push:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/shimmer_cobalt_harbor 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  knob38:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Backup battery tested successfully
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; touch "/tmp/notes-0409.list" && mv -v "/tmp/notes-0409.list" /tmp/databack.log; true ; } > /tmp/stgdir/e0o0J1GLgNWUgnTWRYVh6
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/e0o0J1GLgNWUgnTWRYVh6)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'e0o0J1GLgNWUgnTWRYVh6'
+  pr-2a:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/e0o0J1GLgNWUgnTWRYVh6 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  relays_list:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: I will diff the chaos scenarios tonight
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; for i in `seq 7`; do echo "line ${i}"; done| head -3; true ; } > /tmp/stgdir/nriyw
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/nriyw)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'nriyw'
+  callisto-plus:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/nriyw 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+  mark15:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Error catalog reviewed by hand
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; echo 'let'\''s go!' | grep -o . | sort | uniq -c | sort -rn | head -n3; true ; } > /tmp/stgdir/6S
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/6S)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - '6S'
+  DEPLOY_QA:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Prepare prior input
+          command: |
+            uniq -s 2 /tmp/stgdir/6S 2>/dev/null | wc -l || true
+      - run:
+          name: Pull working copy
+          command: git clone --depth 3 -q --no-single-branch --filter=blob:none https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: tar -xj -f prod-cache-release.tar.bz2
+      - run:
+          command: cmake --version
+      - run:
+          command: ./wait-aggregator
+
+  VISITDisconnect:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Meanwhile train the interns
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; cut -d ':' -f 3 /etc/group | tac; true ; } > /tmp/stgdir/YiElDBuNDLeBlobPeER
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/YiElDBuNDLeBlobPeER)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'YiElDBuNDLeBlobPeER'
+  pool_internal:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: BATCH B52
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; tail -n 3 /etc/group | head -n 3; true ; } > /tmp/stgdir/xx_2a48c45116e2
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/xx_2a48c45116e2)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'xx_2a48c45116e2'
+  globeish:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Fuel check
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; echo -n 'step 2 of 5' | b2sum; true ; } > /tmp/stgdir/trace.log.19
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/trace.log.19)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'trace.log.19'
+  Close-TensorProperty:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: optimization milestone 36
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; cp /etc/hosts /tmp/volume.conf && sed -i -e '1i # managed by hand' /tmp/volume.conf && head -n 3 /tmp/volume.conf; true ; } > /tmp/stgdir/5304e457-e4ff
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/5304e457-e4ff)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - '5304e457-e4ff'
+  tel_rv:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: TokenizerServing
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; grep -rh export /etc 2>/dev/null | wc -l; true ; } > /tmp/stgdir/_wip-b1644
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/_wip-b1644)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - '_wip-b1644'
+  allow_normalize:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: step 34 of 50 archiving shift roster
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; echo 'update the docs' 1>/tmp/volumeShardWhite.out 2>"/tmp/style02.dat" && cat /tmp/volumeShardWhite.out; true ; } > /tmp/stgdir/nriyw
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/nriyw)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'nriyw'
+  cPlatinum:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Mid run backfill
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; cut -c1-21 /etc/passwd | head --lines=20; true ; } > /tmp/stgdir/8123b
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/8123b)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - '8123b'
+  TEMP_PREFIX:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Always fact check the terms of service
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; find /usr/bin -type d -name 'b*' -exec stat -c %n {} +; true ; } > /tmp/stgdir/si21uhnhfkll
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/si21uhnhfkll)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'si21uhnhfkll'
+  d57:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: CD11 Tune Sprite Atlas
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; ls --reverse -ln /run | wc -l; true ; } > /tmp/stgdir/SPARK_REEF
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/SPARK_REEF)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'SPARK_REEF'
+  registry_nightly_s390x:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: We quietly reboot the bootloader
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; grep --extended-regexp '^(Dirty|SwapTotal|MemAvailable)' /proc/meminfo | sort -u; true ; } > /tmp/stgdir/access_20220218
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/access_20220218)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'access_20220218'
+  gf:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: First accrue the cash forecast
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; ls -h -v -c -1 /dev/*random | xargs; true ; } > /tmp/stgdir/config921
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/config921)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'config921'
+  union_opt:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Plan Heron
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; getent passwd | cut -d: -f1 | tr a-z A-Z | grep -v '^[a-m]' | cat -n; true ; } > /tmp/stgdir/v-v6.8.7
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/v-v6.8.7)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'v-v6.8.7'
+  CATEGORY_DYNAMIC:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Immediately list the download queue
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; ps -eo comm= | awk '{print length, $0}' | fmt -w 57; true ; } > /tmp/stgdir/H5fzNV6zbc
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/H5fzNV6zbc)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'H5fzNV6zbc'
+  cbEmptyQuick:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Incubating cell lines Q29
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; if [ ! -e /proc/self ] ; then echo 'true'; else echo false; fi; true ; } > /tmp/stgdir/access_20240215
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/access_20240215)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'access_20240215'
+  Input2CNN:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Free throw reconciliation
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; compgen -b | fmt -w 36 | wc -l; true ; } > /tmp/stgdir/86.74.106
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/86.74.106)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - '86.74.106'
+  saveRPC:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Write off the commissions
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; uptime | tr a-z A-Z | nl; true ; } > /tmp/stgdir/fnv_704e5946
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/fnv_704e5946)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'fnv_704e5946'
+  LINK_5:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Consumer group got wound down
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; LOG='red green blue'; printf '%s\n' "${LOG%% *}"; true ; } > /tmp/stgdir/shimmer_cobalt_harbor
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/shimmer_cobalt_harbor)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'shimmer_cobalt_harbor'
+  dropField:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Polling the rate limiter in progress
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; sha1sum /bin/ls > /tmp/kiwitools.sha1&&sha1sum -c /tmp/kiwitools.sha1; true ; } > /tmp/stgdir/ossystxt
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/ossystxt)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'ossystxt'
+  pauly:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Ride forth and warm the bastion host
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; function mirror { printf "%.0s-" $(seq $1); echo; }; mirror 8; true ; } > /tmp/stgdir/YgNl3qfrZ6e33sV6I02BBb
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/YgNl3qfrZ6e33sV6I02BBb)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'YgNl3qfrZ6e33sV6I02BBb'
+  evesClock:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: wave twelve promote the weekly digest
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; df -P | awk '{print $1}' | grep -c .; true ; } > /tmp/stgdir/LayerDriftMapperPulse
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/LayerDriftMapperPulse)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'LayerDriftMapperPulse'
+  trackUrl:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Skip forecast if the credit notes are down
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; ls $HOME | sort -ur | cat -n | head -n 10; true ; } > /tmp/stgdir/165.110
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/165.110)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - '165.110'
+  DD-END-OLD:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Then we mux the master file
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; pr -3 -t /etc/shells | head -n 1; true ; } > /tmp/stgdir/MVdu
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/MVdu)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'MVdu'
+  v6_15_45:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Let Sora wake the heartbeat
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; echo "won't fix" | cut -d' ' -f1; true ; } > /tmp/stgdir/pulse
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/pulse)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'pulse'
+  heigth:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Go tag the readme
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; install -m 644 /etc/hosts "/tmp/coral_2026-09-01.csv" && ls -l "/tmp/coral_2026-09-01.csv"; true ; } > /tmp/stgdir/rDuM7nKi8CYnQ
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/rDuM7nKi8CYnQ)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'rDuM7nKi8CYnQ'
+  activedisable:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Renew the interns and confirm by email
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; awk -F ":" 'NR % 2{print $1, $3, $4}' /etc/passwd | head -n 8; true ; } > /tmp/stgdir/v9.4.13
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/v9.4.13)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'v9.4.13'
+  qux:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: XXX poll the incident channel properly
+          command: |
+            mkdir -p /tmp/stgdir
+            set +o pipefail 2>/dev/null; awk 'BEGIN{for(i=1;i<=500000;i++) print i, i%7}' > /tmp/stgdir/eastprofileuser; true
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/eastprofileuser)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'eastprofileuser'
+  x0:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: ship changelog later
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; cp /etc/os-release ${TMPDIR:-/tmp}/passport.txt && sed -i.bak 's/^NAME=/OS_NAME=/' ${TMPDIR:-/tmp}/passport.txt && cat ${TMPDIR:-/tmp}/passport.txt; true ; } > /tmp/stgdir/7c69f499-2c36
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/7c69f499-2c36)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - '7c69f499-2c36'
+  PRIVATE_RETRIES_EXTERNAL:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Week 21 filing
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; ls -1 /var|nl; true ; } > /tmp/stgdir/6S
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/6S)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - '6S'
+  aesProjectPacket:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Culture the cell lines and wait
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; echo 'up to date'|tr ' ' '\n'|sort; true ; } > /tmp/stgdir/RMA_064928
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/RMA_064928)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'RMA_064928'
+  AdvancedTreeConfig:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/stgdir
+      - run:
+          name: Execute weigh in
+          command: |
+            mkdir -p /tmp/stgdir
+            { set +o pipefail 2>/dev/null; for w in {1..16..2}; do printf '%02d\n' "$w"; done | nl; true ; } > /tmp/stgdir/e0o0J1GLgNWUgnTWRYVh6
+            printf '%s\n\n' "stage ok $(wc -c </tmp/stgdir/e0o0J1GLgNWUgnTWRYVh6)"
+      - persist_to_workspace:
+          root: /tmp/stgdir
+          paths:
+            - 'e0o0J1GLgNWUgnTWRYVh6'
+workflows:
+  test:
+    jobs:
+      - CkBQiLT7TRwq
+      - VISITDisconnect:
+          requires:
+            - CkBQiLT7TRwq
+      - v5-canary2:
+          requires:
+            - VISITDisconnect
+      - pro-thread:
+          requires:
+            - VISITDisconnect
+      - pool_internal:
+          requires:
+            - pro-thread
+      - add-dashboard:
+          requires:
+            - pool_internal
+      - diff_split_wrench_gadget:
+          requires:
+            - pool_internal
+      - globeish:
+          requires:
+            - diff_split_wrench_gadget
+      - assemble-full-integration-tests:
+          requires:
+            - globeish
+      - filterGANNonce:
+          requires:
+            - globeish
+      - Close-TensorProperty:
+          requires:
+            - filterGANNonce
+      - spin-up:
+          requires:
+            - Close-TensorProperty
+      - inputRef:
+          requires:
+            - Close-TensorProperty
+      - tel_rv:
+          requires:
+            - inputRef
+      - cd:
+          requires:
+            - tel_rv
+      - relays_list:
+          requires:
+            - tel_rv
+      - allow_normalize:
+          requires:
+            - relays_list
+      - callisto-plus:
+          requires:
+            - allow_normalize
+      - mega-migration:
+          requires:
+            - allow_normalize
+      - cPlatinum:
+          requires:
+            - mega-migration
+      - verify:
+          requires:
+            - cPlatinum
+      - FTR-ITEM-REC:
+          requires:
+            - cPlatinum
+      - TEMP_PREFIX:
+          requires:
+            - FTR-ITEM-REC
+      - cf-2:
+          requires:
+            - TEMP_PREFIX
+      - wasBack:
+          requires:
+            - TEMP_PREFIX
+      - d57:
+          requires:
+            - wasBack
+      - quebec:
+          requires:
+            - d57
+      - Willows:
+          requires:
+            - d57
+      - registry_nightly_s390x:
+          requires:
+            - Willows
+      - build-staging-regression-suite:
+          requires:
+            - registry_nightly_s390x
+      - Plugin-Form-Total:
+          requires:
+            - registry_nightly_s390x
+      - gf:
+          requires:
+            - Plugin-Form-Total
+      - fx-alt:
+          requires:
+            - gf
+      - q-footer:
+          requires:
+            - gf
+      - union_opt:
+          requires:
+            - q-footer
+      - PreparePipeline:
+          requires:
+            - union_opt
+      - ROW_201406:
+          requires:
+            - union_opt
+      - CATEGORY_DYNAMIC:
+          requires:
+            - ROW_201406
+      - go-live:
+          requires:
+            - CATEGORY_DYNAMIC
+      - export_ref:
+          requires:
+            - CATEGORY_DYNAMIC
+      - cbEmptyQuick:
+          requires:
+            - export_ref
+      - fix-5061:
+          requires:
+            - cbEmptyQuick
+      - fresh-stubTemp
+      - Input2CNN:
+          requires:
+            - fresh-stubTemp
+      - promote:
+          requires:
+            - Input2CNN
+      - loadLoginAnimated:
+          requires:
+            - Input2CNN
+      - saveRPC:
+          requires:
+            - loadLoginAnimated
+      - alpha:
+          requires:
+            - saveRPC
+      - BAL_23068:
+          requires:
+            - saveRPC
+      - LINK_5:
+          requires:
+            - BAL_23068
+      - dan-push:
+          requires:
+            - LINK_5
+      - URIv6:
+          requires:
+            - LINK_5
+      - dropField:
+          requires:
+            - URIv6
+      - wip-router-v2:
+          requires:
+            - dropField
+      - lightsById:
+          requires:
+            - dropField
+      - pauly:
+          requires:
+            - lightsById
+      - rm-oauth:
+          requires:
+            - pauly
+      - flattenProviderDefaultUnsafe:
+          requires:
+            - pauly
+      - evesClock:
+          requires:
+            - flattenProviderDefaultUnsafe
+      - CORE-610:
+          requires:
+            - evesClock
+      - publicYes:
+          requires:
+            - evesClock
+      - trackUrl:
+          requires:
+            - publicYes
+      - q4-canary:
+          requires:
+            - trackUrl
+      - C_LEN:
+          requires:
+            - trackUrl
+      - DD-END-OLD:
+          requires:
+            - C_LEN
+      - rocket:
+          requires:
+            - DD-END-OLD
+      - Timer-Local:
+          requires:
+            - DD-END-OLD
+      - v6_15_45:
+          requires:
+            - Timer-Local
+      - fiona-push:
+          requires:
+            - v6_15_45
+      - COMMIT_COMMIT:
+          requires:
+            - v6_15_45
+      - heigth:
+          requires:
+            - COMMIT_COMMIT
+      - UAT_RUN_9:
+          requires:
+            - heigth
+      - Compare-VectorObject:
+          requires:
+            - heigth
+      - activedisable:
+          requires:
+            - Compare-VectorObject
+      - bob-ship:
+          requires:
+            - activedisable
+      - reAddressCanvas:
+          requires:
+            - activedisable
+      - qux:
+          requires:
+            - reAddressCanvas
+      - full-send:
+          requires:
+            - qux
+      - clearConst:
+          requires:
+            - qux
+      - x0:
+          requires:
+            - clearConst
+      - LAB_INIT_3:
+          requires:
+            - x0
+      - mark15:
+          requires:
+            - x0
+      - PRIVATE_RETRIES_EXTERNAL:
+          requires:
+            - mark15
+      - DEPLOY_QA:
+          requires:
+            - PRIVATE_RETRIES_EXTERNAL
+      - prod_val:
+          requires:
+            - PRIVATE_RETRIES_EXTERNAL
+      - aesProjectPacket:
+          requires:
+            - prod_val
+      - zulu:
+          requires:
+            - aesProjectPacket
+      - knob38:
+          requires:
+            - aesProjectPacket
+      - AdvancedTreeConfig:
+          requires:
+            - knob38
+      - pr-2a:
+          requires:
+            - AdvancedTreeConfig
